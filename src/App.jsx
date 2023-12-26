@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Search } from "./Search";
+import { Search } from "./FindAddressBar";
 import { TransactionsSection } from "./TransactionsSection";
 import { ButtonSwitch } from "./ButtonSwitch";
 import { AddressSelector } from "./AddressSelector";
@@ -84,7 +84,7 @@ function App() {
       />
       {!!addresses.length && (
         <>
-          <div className="mb-4 flex">
+          <div className="mb-8 flex">
             <AddressSelector
               addresses={addresses}
               currentAddress={currentAddress}
