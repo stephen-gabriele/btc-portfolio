@@ -17,6 +17,7 @@ The application allows a user to input a bitcoin address and view its transactio
 - prefetching next batch of transactions for a user.
 - Removing addresses
 - Wallet syncing
+- Create a generic button components with shared styling
 
 1. **Scope out the work to be completed:**
 

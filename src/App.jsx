@@ -6,6 +6,7 @@ import { ButtonSwitch } from "./ButtonSwitch";
 import { AddressSelector } from "./AddressSelector";
 import { SummarySection } from "./SummarySection";
 import { useEffect } from "react";
+import { OptionsBar } from "./OptionsBar";
 
 // TODO: get live BTC price
 export const BTC_PRICE = 43_435;
@@ -84,28 +85,15 @@ function App() {
       />
       {!!addresses.length && (
         <>
-          <div className="mb-8 flex">
-            <AddressSelector
-              addresses={addresses}
-              currentAddress={currentAddress}
-              handleChange={setCurrentAddress}
-              disabled={!addresses.length || portfolioMode}
-            />
-            <button
-              className="ml-4 mr-8 bg-red-500 border-none px-4 py-2 rounded-2xl focus:outline-none hover:opacity-80"
-              onClick={removeAddress}
-            >
-              Remove Address
-            </button>
-            <ButtonSwitch
-              className="ml-auto"
-              isFirstSelected={!portfolioMode}
-              firstCtaText="Individual"
-              secondCtaText="Portfolio"
-              onChange={setPortfolioMode}
-            />
-          </div>
-
+          <OptionsBar
+            className="mb-8"
+            addresses={addresses}
+            currentAddress={currentAddress}
+            setCurrentAddress={setCurrentAddress}
+            removeAddress={removeAddress}
+            portfolioMode={portfolioMode}
+            setPortfolioMode={setPortfolioMode}
+          />
           <SummarySection
             className="mb-12"
             balance={userInformation[currentAddress]?.final_balance}
