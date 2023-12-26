@@ -64,6 +64,7 @@ function App() {
     const userInfo = { ...userInformation };
     delete userInfo[currentAddress];
     setUserInformation(userInfo);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userInfo));
     setCurrentAddress(Object.keys(userInfo)[0] || "");
   };
 
