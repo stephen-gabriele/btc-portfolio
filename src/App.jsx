@@ -95,13 +95,17 @@ function App() {
             portfolioMode={portfolioMode}
             setPortfolioMode={setPortfolioMode}
           />
-          <SummarySection
-            className="mb-12"
-            balance={userInformation[currentAddress]?.final_balance}
-          />
-          <TransactionsSection
-            transactions={userInformation[currentAddress]?.txs}
-          />
+          {loading ? null : (
+            <>
+              <SummarySection
+                className="mb-12"
+                balance={userInformation[currentAddress]?.final_balance}
+              />
+              <TransactionsSection
+                transactions={userInformation[currentAddress]?.txs}
+              />
+            </>
+          )}
         </>
       )}
     </div>
