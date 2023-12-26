@@ -8,6 +8,7 @@ export const OptionsBar = ({
   currentAddress,
   setCurrentAddress,
   removeAddress,
+  handleSync,
   portfolioMode,
   setPortfolioMode,
 }) => {
@@ -20,7 +21,13 @@ export const OptionsBar = ({
         disabled={!addresses.length || portfolioMode}
       />
       <button
-        className="ml-4 mr-8 bg-red-500 border-none px-4 py-2 rounded-2xl focus:outline-none hover:opacity-80"
+        className="ml-4 bg-blue-500 border-none px-4 py-2 rounded-2xl focus:outline-none hover:opacity-80"
+        onClick={handleSync}
+      >
+        Sync
+      </button>
+      <button
+        className="ml-4 mr-12 bg-red-500 border-none px-4 py-2 rounded-2xl focus:outline-none hover:opacity-80"
         onClick={removeAddress}
       >
         Remove Address

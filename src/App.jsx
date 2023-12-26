@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Search } from "./FindAddressBar";
+import { FindAddressBar } from "./FindAddressBar";
 import { TransactionsSection } from "./TransactionsSection";
 import { ButtonSwitch } from "./ButtonSwitch";
 import { AddressSelector } from "./AddressSelector";
@@ -48,9 +48,9 @@ function App() {
     setUserInformation(userInfo);
   };
 
-  // Move error handleing and loading to state manager
-  const addAddress = async (addr) => {
-    if (!addresses.includes(addr)) {
+  // TODO: Move error handleing and loading to state manager
+  const addAddress = async (addr, sync = false) => {
+    if (!addresses.includes(addr) || sync) {
       setLoading(true);
       await fetchTransactions(addr);
       setLoading(false);
@@ -77,7 +77,7 @@ function App() {
 
   return (
     <div className="py-32 flex flex-col justify-center items-center">
-      <Search
+      <FindAddressBar
         className="mb-20"
         handleSubmit={addAddress}
         loading={loading}
@@ -90,6 +90,7 @@ function App() {
             addresses={addresses}
             currentAddress={currentAddress}
             setCurrentAddress={setCurrentAddress}
+            handleSync={() => addAddress(currentAddress, true)}
             removeAddress={removeAddress}
             portfolioMode={portfolioMode}
             setPortfolioMode={setPortfolioMode}

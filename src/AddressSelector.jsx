@@ -8,7 +8,7 @@ export const AddressSelector = ({
 }) => {
   return (
     <label>
-      <span className="pr-2">Selected Address:</span>
+      <span className="pr-2">BTC Address:</span>
       <select
         className={`w-40 focus:outline-none border-none rounded-lg px-8 py-2 ${
           disabled ? "opacity-50" : ""
