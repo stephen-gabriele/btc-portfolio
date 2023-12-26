@@ -1,6 +1,11 @@
 import React from "react";
 
-export const AddressSelector = ({ currentAddress, addresses, disabled }) => {
+export const AddressSelector = ({
+  currentAddress,
+  addresses,
+  disabled,
+  handleChange,
+}) => {
   return (
     <label>
       <span className="pr-2">Selected Address:</span>
@@ -9,10 +14,11 @@ export const AddressSelector = ({ currentAddress, addresses, disabled }) => {
           disabled ? "opacity-50" : ""
         }`}
         value={currentAddress}
+        onChange={(e) => handleChange(e.target.value)}
         disabled={disabled}
       >
         {addresses.map((address) => (
-          <option key={address} className="rounded-lg">
+          <option key={address} className="rounded-lg" value={address}>
             {address.slice(0, 4)}...{address.slice(-4)}
           </option>
         ))}

@@ -5,56 +5,80 @@ import { TransactionsSection } from "./TransactionsSection";
 import { ButtonSwitch } from "./ButtonSwitch";
 import { AddressSelector } from "./AddressSelector";
 import { SummarySection } from "./SummarySection";
+import { useEffect } from "react";
 
 // TODO: get live BTC price
 export const BTC_PRICE = 43_435;
-export const SATS = 100_000_000;
+export const SATS = 100_000_000; // Number of Satoshis in a Bitcoin
+const LOCAL_STORAGE_KEY = "btc-user-addresses";
 
 function App() {
+  const [userInformation, setUserInformation] = useState({});
   const [currentAddress, setCurrentAddress] = useState("");
-  const [addressData, setAddressData] = useState();
-  const [addresses, setAddresses] = useState([]);
   const [portfolioMode, setPortfolioMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+
+  // TODO: memoize
+  const addresses = Object.keys(userInformation);
 
   // TODO: Move to state manager e.g. redux
   const fetchTransactions = async (addr) => {
     try {
       const response = await fetch(`https://blockchain.info/rawaddr/${addr}`);
       const addressInfo = await response.json();
-      setAddressData(addressInfo);
-      setError(false);
+      if (addressInfo?.error) {
+        setError("Could not find Address");
+      } else {
+        updateUserInfo(addr, addressInfo);
+        setError("");
+      }
     } catch (e) {
-      console.log(e);
-      setError(true);
+      setError("Could not reach Server");
     }
+  };
+
+  const updateUserInfo = (addr, addrInfo) => {
+    const userInfo = {
+      ...userInformation,
+      [addr]: addrInfo,
+    };
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userInfo));
+    setUserInformation(userInfo);
   };
 
   // Move error handleing and loading to state manager
-  const onSubmit = async (addr) => {
+  const addAddress = async (addr) => {
     if (!addresses.includes(addr)) {
       setLoading(true);
-      const savedAddr = JSON.parse(localStorage.getItem(addr));
-      if (savedAddr) {
-        setAddressData(savedAddr);
-        setError(false);
-      } else {
-        await fetchTransactions(addr);
-      }
+      await fetchTransactions(addr);
       setLoading(false);
       setCurrentAddress(addr);
-      setAddresses([...addresses, addr]);
     } else {
-      setError(true);
+      setError("Address has already been added!");
     }
   };
 
+  const removeAddress = () => {
+    const userInfo = { ...userInformation };
+    delete userInfo[currentAddress];
+    setUserInformation(userInfo);
+    setCurrentAddress(Object.keys(userInfo)[0] || "");
+  };
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (userInfo) {
+      setCurrentAddress(Object.keys(userInfo)[0]);
+      setUserInformation(userInfo);
+    }
+  }, []);
+
   return (
-    <div className="py-32">
+    <div className="py-32 flex flex-col justify-center items-center">
       <Search
         className="mb-20"
-        handleSubmit={onSubmit}
+        handleSubmit={addAddress}
         loading={loading}
         error={error}
       />
@@ -64,8 +88,15 @@ function App() {
             <AddressSelector
               addresses={addresses}
               currentAddress={currentAddress}
+              handleChange={setCurrentAddress}
               disabled={!addresses.length || portfolioMode}
             />
+            <button
+              className="ml-4 mr-8 bg-red-500 border-none px-4 py-2 rounded-2xl focus:outline-none hover:opacity-80"
+              onClick={removeAddress}
+            >
+              Remove Address
+            </button>
             <ButtonSwitch
               className="ml-auto"
               isFirstSelected={!portfolioMode}
@@ -77,9 +108,11 @@ function App() {
 
           <SummarySection
             className="mb-12"
-            balance={addressData?.final_balance}
+            balance={userInformation[currentAddress]?.final_balance}
           />
-          <TransactionsSection transactions={addressData?.txs} />
+          <TransactionsSection
+            transactions={userInformation[currentAddress]?.txs}
+          />
         </>
       )}
     </div>

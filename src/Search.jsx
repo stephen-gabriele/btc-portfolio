@@ -28,11 +28,7 @@ export const Search = ({ className = "", handleSubmit, loading, error }) => {
           Add Address
         </button>
       </div>
-      {error && (
-        <div className="text-red-400 font-semibold">
-          Could not find address.
-        </div>
-      )}
+      {error && <div className="text-red-400 font-semibold">{error}</div>}
     </div>
   );
 };

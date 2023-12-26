@@ -26,9 +26,11 @@ export const TransactionsSection = ({ transactions }) => {
           );
         })}
       </div>
-      <button className="focus:outline-none rounded-2xl px-4 py-2 bg-gray-600 hover:opacity-80">
-        Load more
-      </button>
+      {transactions.length % 50 === 0 && ( // TODO use logic based on api call, this results in bug
+        <button className="focus:outline-none rounded-2xl px-4 py-2 bg-gray-600 hover:opacity-80">
+          Load more
+        </button>
+      )}
     </div>
   );
 };
